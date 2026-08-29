@@ -1,11 +1,11 @@
-# Standard 3x4 Dark Hex bounds
+# Exact value of standard 3x4 Dark Hex
 
 Let `v` be Black's win probability under optimal play in standard Classic
 Dark Hex. These certificates prove
 
 ```text
-5642141/26723476 <= v <= 5654469/26723476
-0.211130505627336803 <= v <= 0.211591822860169837
+v = 14279/67484
+  = 0.211590895619702447987671151680
 ```
 
 The previous published bound was `[1/7, 1/4]`, stated by Ryan Hayward, Martin
@@ -15,8 +15,8 @@ gave the earlier bound `[0.112, 0.268]`.
 
 The certificate consists of:
 
-- `black-lower.mix`: a rational mixture of 160 deterministic Black strategies;
-- `white-upper.mix`: a rational mixture of 120 deterministic White strategies;
+- `black-lower.mix`: a rational mixture of 92 deterministic Black strategies;
+- `white-upper.mix`: a rational mixture of 112 deterministic White strategies;
 - `verify.py`: the game rules, exact best-response calculation, and replay
   check.
 
@@ -32,19 +32,48 @@ stone and ends the turn. Probing an opponent stone reports a collision and
 the mover continues. Each strategy depends only on that player's private
 probe history.
 
+## First-probe probabilities
+
+For the particular optimal strategies in these certificates, the first-probe
+probabilities are:
+
+Black:
+
+| | a | b | c |
+| ---: | ---: | ---: | ---: |
+| **1** | `1633/67484` (2.419833%) | `1310/16871` (7.764804%) | 0 |
+| **2** | `9555/67484` (14.158912%) | `3602/16871` (21.350246%) | `1453/33742` (4.306206%) |
+| **3** | `1453/33742` (4.306206%) | `3602/16871` (21.350246%) | `9555/67484` (14.158912%) |
+| **4** | 0 | `1310/16871` (7.764804%) | `1633/67484` (2.419833%) |
+
+White:
+
+| | a | b | c |
+| ---: | ---: | ---: | ---: |
+| **1** | 0 | `30/16871` (0.177820%) | `14023/33742` (41.559481%) |
+| **2** | 0 | `109/16871` (0.646079%) | `1285/16871` (7.616620%) |
+| **3** | `1285/16871` (7.616620%) | `109/16871` (0.646079%) | 0 |
+| **4** | `14023/33742` (41.559481%) | `30/16871` (0.177820%) | 0 |
+
+Black's first probe always places a stone. White's table gives the first
+attempted probe, which can collide with Black's hidden stone.
+
 Against `black-lower.mix`, an unrestricted optimal White response wins
-`21081335/26723476` of the mixture's integer mass. Hence Black wins at
+`106410/134968` of the mixture's integer mass. Hence Black wins at
 least
 
 ```text
-1 - 21081335/26723476 = 5642141/26723476.
+1 - 106410/134968 = 28558/134968 = 14279/67484
 ```
 
 Against `white-upper.mix`, an unrestricted optimal Black response wins
 
 ```text
-11308938/53446952 = 5654469/26723476.
+1827712/8637952 = 14279/67484
 ```
+
+The lower and upper certificates coincide, so this is the exact minimax
+value.
 
 The best-response calculation maximizes at every reachable private history.
 A probe known to collide in every consistent position is omitted because it
@@ -57,11 +86,12 @@ covers randomized opponents.
 
 ## Method and references
 
-The strategies were found with an exact double-oracle search. Starting from a
-small restricted game, it solves for mixed strategies, computes each player's
-best response in the unrestricted game, adds those responses, and repeats.
-Early policy generation also used sequence form, which represents a
-perfect-recall strategy by realization weights on action sequences.
+The strategies were found with a coupled double-oracle search. Each pass
+solved the restricted matrix game, computed both unrestricted best responses,
+and added any new response together with its 180-degree rotation. The final
+restricted pools contained 354 Black and 328 White strategies. Exact rational
+reconstruction on the optimal faces produced the two mixtures above; the
+standalone unrestricted checker supplies the proof.
 
 The relevant general methods are:
 

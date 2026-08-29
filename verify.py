@@ -26,8 +26,8 @@ WHITE_SHIFT = BLACK_SHIFT + CELLS
 HISTORY_SHIFT = WHITE_SHIFT + CELLS
 MAX_POLICY_COUNT = 1 << TYPE_BITS
 CERTIFICATES = (
-    ("black-lower.mix", BLACK, Fraction(5642141, 26723476)),
-    ("white-upper.mix", WHITE, Fraction(5654469, 26723476)),
+    ("black-lower.mix", BLACK, Fraction(14279, 67484)),
+    ("white-upper.mix", WHITE, Fraction(14279, 67484)),
 )
 
 
