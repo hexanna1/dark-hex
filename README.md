@@ -1,4 +1,6 @@
-# Exact value of standard 3x4 Dark Hex
+# Exact Dark Hex values
+
+## Classic 3x4
 
 Let `v` be Black's win probability under optimal play in standard Classic
 Dark Hex. These certificates prove
@@ -15,15 +17,17 @@ gave the earlier bound `[0.112, 0.268]`.
 
 The certificate consists of:
 
-- `black-lower.mix`: a rational mixture of 92 deterministic Black strategies;
-- `white-upper.mix`: a rational mixture of 112 deterministic White strategies;
-- `verify.py`: the game rules, exact best-response calculation, and replay
-  check.
+- `classic/black-lower.mix`: a rational mixture of 92 deterministic Black
+  strategies;
+- `classic/white-upper.mix`: a rational mixture of 112 deterministic White
+  strategies;
+- `classic/verify.py`: the game rules, exact best-response calculation, and
+  replay check.
 
 Copy this directory anywhere and run:
 
 ```sh
-python3 -B verify.py
+python3 -B classic/verify.py
 ```
 
 The checker encodes a four-row, three-column board. Black moves first and
@@ -58,7 +62,7 @@ White:
 Black's first probe always places a stone. White's table gives the first
 attempted probe, which can collide with Black's hidden stone.
 
-Against `black-lower.mix`, an unrestricted optimal White response wins
+Against `classic/black-lower.mix`, an unrestricted optimal White response wins
 `106410/134968` of the mixture's integer mass. Hence Black wins at
 least
 
@@ -66,7 +70,7 @@ least
 1 - 106410/134968 = 28558/134968 = 14279/67484
 ```
 
-Against `white-upper.mix`, an unrestricted optimal Black response wins
+Against `classic/white-upper.mix`, an unrestricted optimal Black response wins
 
 ```text
 1827712/8637952 = 14279/67484
@@ -84,14 +88,52 @@ Randomization cannot improve a response to a fixed mixture beyond its best
 deterministic private-history strategy, so checking these best responses also
 covers randomized opponents.
 
+## Abrupt 3x3
+
+In Abrupt Dark Hex every probe ends the turn, including a collision. An empty
+probe places a stone. Probing an opponent stone places nothing and privately
+reports a collision to the mover; the opponent observes neither the attempted
+cell nor the outcome.
+
+The certificates in `abrupt/` prove that Black's optimal win probability is
+
+```text
+207579464761/299876201866
+= 0.692217199862218825825789679238
+```
+
+Run the standalone exact checker with:
+
+```sh
+python3 -B abrupt/verify.py
+```
+
+`abrupt/black-lower.mix` is a rational mixture of 234 deterministic Black
+strategies. Against it, an unrestricted optimal White response wins integer
+mass `553780422630/1799257211196`, proving the matching lower bound for Black.
+
+`abrupt/white-upper.mix` is a rational mixture of 244 deterministic White
+strategies. Against it, an unrestricted optimal Black response wins integer
+mass `415158929522/599752403732`, proving the matching upper bound.
+
+The checker encodes the rules, parses the complete strategies, computes an
+unrestricted exact best response at every reachable private history, and
+independently replays the extracted response against every strategy in the
+mixture. A randomized response cannot exceed the best deterministic response
+to a fixed mixture, so the two matching bounds prove the minimax value.
+
 ## Method and references
 
-The strategies were found with a coupled double-oracle search. Each pass
-solved the restricted matrix game, computed both unrestricted best responses,
-and added any new response together with its 180-degree rotation. The final
-restricted pools contained 354 Black and 328 White strategies. Exact rational
-reconstruction on the optimal faces produced the two mixtures above; the
-standalone unrestricted checker supplies the proof.
+Both results were found with coupled double-oracle searches. Each pass solved
+a restricted matrix game, computed unrestricted best responses, and added new
+responses together with their 180-degree rotations. Exact rational
+reconstruction on the optimal faces produced the certificate mixtures; the
+standalone unrestricted checkers supply the proofs.
+
+Abrupt 3x3 has larger degenerate response faces, so each best-response
+calculation retained every maximizing action and cheaply extracted many tied
+deterministic responses. Perturbed equilibrium mixtures and separate lower-
+and upper-bound closure were used before exact support reduction.
 
 The relevant general methods are:
 

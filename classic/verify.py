@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Verify exact lower and upper bounds for standard 3x4 Classic Dark Hex."""
+"""Verify exact lower and upper bounds for 3x4 Classic Dark Hex."""
 
 import sys
 import time
@@ -10,7 +10,6 @@ from decimal import Decimal, localcontext
 from fractions import Fraction
 from functools import lru_cache
 from pathlib import Path
-
 
 ROWS = 4
 COLUMNS = 3
@@ -87,7 +86,11 @@ def append_event(history, cell, success):
 def knowledge(history):
     own = 0
     unavailable = 0
+    count = 0
     while history:
+        count += 1
+        if count > CELLS:
+            raise ValueError("private history exceeds board size")
         event = history & 31
         cell = (event >> 1) - 1
         if not 0 <= cell < CELLS or unavailable & bit(cell):
@@ -102,7 +105,11 @@ def knowledge(history):
 def rotate_history(history):
     result = 0
     shift = 0
+    count = 0
     while history:
+        count += 1
+        if count > CELLS:
+            raise ValueError("private history exceeds board size")
         event = history & 31
         cell = (event >> 1) - 1
         if not 0 <= cell < CELLS:
@@ -176,8 +183,6 @@ def read_mixture(path, expected_owner):
         return token
 
     take("DARKHEX_MIXTURE")
-    if parse_u64(take(), "format version") != 1:
-        raise ValueError("unsupported mixture version")
     take("ROWS")
     rows = parse_u64(take(), "board rows")
     take("COLUMNS")
@@ -228,8 +233,6 @@ def read_mixture(path, expected_owner):
 
 
 def pack_world(policy_type, black, white, opponent_history):
-    # A world is one opponent policy together with its hidden board state and
-    # private history. Packing keeps the belief-state memo compact.
     if not 0 <= policy_type <= TYPE_MASK:
         raise ValueError("policy index does not fit packed belief world")
     return (policy_type | (black << BLACK_SHIFT) | (white << WHITE_SHIFT)
@@ -463,7 +466,7 @@ def main():
     lower = CERTIFICATES[0][2]
     upper = CERTIFICATES[1][2]
     with localcontext() as context:
-        context.prec = 30
+        context.prec = 40
         lower_decimal = Decimal(lower.numerator) / Decimal(lower.denominator)
         upper_decimal = Decimal(upper.numerator) / Decimal(upper.denominator)
     print(f"true_value_interval {lower} {upper}")
