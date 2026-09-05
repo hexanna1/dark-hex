@@ -59,7 +59,7 @@ The exact value is
 14279/67484 = 0.211590895619702447987671151680...
 ```
 
-The certificate uses 92 Black policies and 112 White policies.
+The certificate uses 84 Black policies and 104 White policies.
 The previous published bound was `[1/7, 1/4]`, stated by Ryan Hayward, Martin
 Müller, and Bedir Tapkan in ["Notes on Dark Hex"](https://www.sfu.ca/~jed/Conferences/CCC2023abstracts.pdf),
 page 2. François Bonnet's [2018 analysis](https://doi.org/10.3233/ICG-180057)
@@ -126,7 +126,7 @@ The exact value is
 207579464761/299876201866 = 0.692217199862218825825789679238...
 ```
 
-The certificate uses 234 Black policies and 244 White policies.
+The certificate uses 222 Black policies and 234 White policies.
 
 ## Why the certificates prove the values
 
@@ -142,7 +142,7 @@ probability gives the upper guarantee:
 
 | Case | Black lower guarantee | Black upper guarantee |
 | --- | --- | --- |
-| Classic | `1 − 106410/134968 = 14279/67484` | `1827712/8637952 = 14279/67484` |
+| Classic | `1 − 53205/67484 = 14279/67484` | `85674/404904 = 14279/67484` |
 | Classic, public a2 | `1 − 361011/399203 = 5456/57029` | `21824/228116 = 5456/57029` |
 | Classic, public b2 | `1 − 12/14 = 1/7` | `1/7` |
 | Classic, other public representatives | `0` by nonnegativity | `0/1 = 0` |
