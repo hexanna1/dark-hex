@@ -1,1 +1,4 @@
 .DS_Store
+/classic-4x4/*.realization
+/classic-4x4/*.strategy
+/classic-4x4/verify4x4
