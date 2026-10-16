@@ -129,7 +129,7 @@ The exact value is
 14279/67484 = 0.211590895619702447987671151680...
 ```
 
-The certificate uses 84 Black policies and 96 White policies.
+The certificate uses 80 Black policies and 74 White policies.
 The previous published bound was `[1/7, 1/4]`, stated by Ryan Hayward, Martin
 Müller, and Bedir Tapkan in ["Notes on Dark Hex"](https://www.sfu.ca/~jed/Conferences/CCC2023abstracts.pdf),
 page 2. François Bonnet's [2018 analysis](https://doi.org/10.3233/ICG-180057)
@@ -178,7 +178,7 @@ If Black may choose its opening but must announce it before White moves,
 the value is **1/7**, attained by b2 or b3. White can condition its strategy
 on the announcement, so randomizing the opening cannot improve that value.
 
-The stored a2 certificates use 98 Black policies and 73 White policies;
+The stored a2 certificates use 78 Black policies and 68 White policies;
 b2 uses 12 and 7. For each zero-valued representative (a1, b1, c1 and c2), a
 single deterministic White policy suffices. Black's unrestricted best
 response never wins, and nonnegativity supplies the matching lower bound.
@@ -196,7 +196,7 @@ The exact value is
 207579464761/299876201866 = 0.692217199862218825825789679238...
 ```
 
-The certificate uses 214 Black policies and 226 White policies.
+The certificate uses 206 Black policies and 214 White policies.
 
 ## Why the certificates prove the values
 
