@@ -1,14 +1,16 @@
 # Exact Dark Hex values
 
 This repository gives exact values for Classic 4x4 and 3x4, every public
-opening of Classic 3x4, and Abrupt 3x3. Each value is Black's probability of
-winning under optimal play.
+opening of both boards, and Abrupt 3x4 and 3x3. Each value is Black's
+probability of winning under optimal play.
 
 | Variant | Board | Exact Black value | Certificate |
 | --- | --- | --- | --- |
 | Classic | 4 columns × 4 rows | `5345119702052171/6736824633547900` ≈ 79.3418% | [classic-4x4/](classic-4x4/) |
+| Classic, public opening | 4 columns × 4 rows | [Every opening solved](#classic-4x4-public-openings) | [classic-4x4-public/](classic-4x4-public/) |
 | Classic | 3 columns × 4 rows | `14279/67484` ≈ 21.1591% | [classic-3x4/](classic-3x4/) |
 | Classic, public opening | 3 columns × 4 rows | [Every opening solved](#classic-3x4-public-openings) | [classic-3x4-public/](classic-3x4-public/) |
+| Abrupt | 3 columns × 4 rows | [Exact value](#abrupt-3x4) ≈ 42.8630% | [abrupt-3x4/](abrupt-3x4/) |
 | Abrupt | 3 columns × 3 rows | `207579464761/299876201866` ≈ 69.2217% | [abrupt-3x3/](abrupt-3x3/) |
 
 The certificates specify strategies with exact rational probabilities. Their
@@ -43,33 +45,36 @@ classic-4x4/verify4x4 classic-4x4/black-lower.strategy \
 
 The checker prints `exact_value` when the bounds match exactly.
 
-### Classic 3x4 and Abrupt 3x3
+### Other variants
 
 Python's standard library suffices:
 
 ```sh
+python3 -B classic-4x4-public/verify.py
 python3 -B classic-3x4/verify.py
 python3 -B classic-3x4-public/verify.py
+python3 -B abrupt-3x4/verify.py
 python3 -B abrupt-3x3/verify.py
 ```
 
 Each directory contains its own checker and strategy files and can be copied
-elsewhere. The public-opening command checks all twelve cells. To check a
-single opening, use, for example:
+elsewhere. The public-opening commands check every cell. To check a single
+opening, append its cell name, for example:
 
 ```sh
 python3 -B classic-3x4-public/verify.py a2
 ```
 
-`black-lower.mix` supplies Black's strategy and `white-upper.mix` supplies
-White's. Public-opening files are grouped by cell; zero-valued cases need
-only a White strategy.
+Certificates are named `black-lower` for Black and `white-upper` for White.
+Public-opening files are grouped by cell; zero-valued cases need only a
+White strategy.
 
 ## Rules
 
 Black connects top to bottom; White connects left to right. Black moves
 first. Players see their own probe histories, including private collisions,
-and retain perfect recall. There is no swap rule.
+and retain perfect recall. A player may not probe the same cell twice.
+There is no swap rule.
 
 An empty probe places a stone. In **Classic** Dark Hex, a collision leaves the
 same player to probe again; only a successful placement ends the turn.
@@ -96,9 +101,7 @@ next probe at each private history, as explained
 
 These are the supplied strategies' first-probe probabilities, rounded to four
 decimal places as percentages. A zero is exact. Columns are a–d from left to
-right; rows are 1–4 from top to bottom. Exact probabilities are the root
-profile’s action weights divided by their sum, after applying the root
-reference’s cell orientation.
+right; rows are 1–4 from top to bottom.
 
 **Black**
 
@@ -120,6 +123,40 @@ reference’s cell orientation.
 
 Black's first probe always places a stone. White's table gives the first
 attempted probe, which can collide with Black's hidden stone.
+
+## Classic 4x4: public openings
+
+Each cell below gives Black's value for that announced opening, rounded to
+four decimal places as a percentage. Columns are a–d from left to right;
+rows are 1–4 from top to bottom.
+
+| | a | b | c | d |
+| ---: | ---: | ---: | ---: | ---: |
+| **1** | 35.8743% | 39.0359% | 50.0000% | 74.0220% |
+| **2** | 46.0755% | 46.4856% | 58.2781% | 39.0248% |
+| **3** | 39.0248% | 58.2781% | 46.4856% | 46.0755% |
+| **4** | 74.0220% | 50.0000% | 39.0359% | 35.8743% |
+
+The exact values are:
+
+| Openings | Exact Black value |
+| --- | --- |
+| a1, d4 | `39200463131587349474018821953682501886288090675/109271866634581876366005467237558775842245124437` |
+| b1, c4 | `1246266071734072815448447585357/3192617014544364958846653854284` |
+| c1, b4 | `1/2` |
+| d1, a4 | `205948805123/278226535047` |
+| a2, d3 | `13349694926648706453175314826171758852232677435633/28973542266583825852988542841638070814335704203607` |
+| b2, c3 | `3171798626214542646/6823179292865617463` |
+| c2, b3 | `900674/1545475` |
+| d2, a3 | `9265879471/23743551290` |
+
+If Black may choose its opening but must announce it before White moves,
+the value is **205948805123/278226535047**, attained by d1 or a4. White can
+condition its strategy on the announcement, so randomizing the opening
+cannot improve that value.
+
+The files cover eight representative openings. A 180-degree rotation gives
+strategies for the other eight.
 
 ## Classic 3x4
 
@@ -184,9 +221,18 @@ single deterministic White policy suffices. Black's unrestricted best
 response never wins, and nonnegativity supplies the matching lower bound.
 
 The files cover six representative openings. A 180-degree rotation gives
-strategies for the other six. The checker transforms each complete policy
-and directly verifies its bound at the rotated opening, searching all legal
-responses there as well.
+strategies for the other six.
+
+## Abrupt 3x4
+
+The exact value is
+
+```text
+1658331822631074831337427943811547900335996648106302498021967217529357706919259542347081527633662102542317699782998092767588866739425551081290810814711079814639576765256474596354793049181984903992720545/3868913339316971476892276370186945925071293647755822939156449134145896763768272159883526263674247737057268842479851914751928049426237596189792828826475233321814469598464329391194550853624424141390761566 = 0.428629870247711792524300308845...
+```
+
+The certificates give the probability of each next probe at each private
+history, as explained [below](#shared-continuation-certificates).
 
 ## Abrupt 3x3
 
@@ -210,57 +256,23 @@ For a Black mixture, the checker maximizes the total weight of policies
 White can defeat with one responding strategy. Dividing by the mixture's
 total weight gives White's maximum winning probability; its complement is
 Black's lower guarantee. For a White mixture, Black's maximum winning
-probability gives the upper guarantee:
-
-| Case | Black lower guarantee | Black upper guarantee |
-| --- | --- | --- |
-| Classic 3x4 | `1 − 53205/67484 = 14279/67484` | `14279/67484` |
-| Classic, public a2 | `1 − 51573/57029 = 5456/57029` | `5456/57029` |
-| Classic, public b2 | `1 − 6/7 = 1/7` | `1/7` |
-| Classic, other public representatives | `0` by nonnegativity | `0/1 = 0` |
-| Abrupt | `1 − 92296737105/299876201866` | `207579464761/299876201866` |
-
-Both Abrupt fractions equal `207579464761/299876201866`.
+probability gives the upper guarantee.
 
 The mixture checkers use exact integer arithmetic to find a best response.
-In Classic, a probe certain to collide is omitted: its outcome is already
-known, it reveals nothing and it consumes no turn. Each checker extracts a
-maximizing policy and separately replays it against every mixture component.
+Each checker separately replays its maximizing policy against every mixture
+component to confirm the computed bound.
 
 ### Shared-continuation certificates
 
-The 4x4 files describe behavioral strategies: at each private probe history,
-choose the next probe with the listed exact probabilities. With perfect
-recall, this has the same expressive power as a mixture of complete policies.
+The 4x4 and Abrupt 3x4 files describe behavioral strategies: at each private
+probe history, choose the next probe with the listed exact probabilities.
+Histories with the same future strategy share a continuation. With perfect
+recall, these strategies are equivalent to mixtures of complete policies.
 
-Identical future strategies share a continuation profile, including those
-that differ only by a 180-degree rotation. Each profile lists probes, positive
-integer weights and continuation references for collision and success. Its
-action probabilities are the weights divided by their sum.
-
-The checker expands these references at each actual private history using
-exact 128-bit masses. Each observation history inherits its action's full
-mass. Sharing continuations changes only storage; the best-response search
-still distinguishes complete private histories and enforces probe legality.
-
-A response state records the responder's stones and probed cells, together
-with the compatible opponent histories and their masses. For each possible
-probe, the checker separates success from collision and follows the
-opponent's hidden choices until the next response turn. It adds immediate
-winning mass to the optimal values of the two observation branches; an
-opponent connection contributes zero. Taking the maximum over probes gives
-the response value. Every probe extends a private history, so induction on
-the remaining probes establishes the result.
-
-The checker may omit a certainly occupied probe. It may also try a probe that
-completes a connection first: a collision costs no turn and leaves the other
-options available.
-
-The Black certificate limits White to `1391704931495729/6736824633547900`.
-The White certificate limits Black to `5345119702052171/6736824633547900`.
-Taking the complement of the first bound gives the second, proving the value.
-The checker separately replays the maximizing response on actual boards,
-checking that it attains the computed bound.
+The checkers compute exact best responses while preserving complete private
+histories and applying each variant's collision rule. They separately replay
+the maximizing responses on actual boards. Black's strategy supplies a lower
+guarantee and White's supplies an upper guarantee.
 
 ### Arbitrary opponents
 
@@ -273,10 +285,9 @@ randomized opponents. Thus the matching guarantees prove the exact values.
 
 The nonzero certificates were found using double-oracle searches: optimizing
 over finite sets of candidate strategies and expanding those sets with
-unrestricted best responses. For public a2 and Classic 4x4, sequence-form
-optimization also allowed choices from different policies to be combined at
-individual private histories. Rational reconstruction supplied the exact
-integer weights for verification.
+unrestricted best responses. Sequence-form optimization also refined choices
+at individual private histories. Rational reconstruction supplied exact
+probabilities for verification.
 
 Background on these methods:
 
